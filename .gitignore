@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+config.ini
+.env
+chatbot.tar
+exercise1.py
+exercise2.py
+exercise3.py
+hello.py
+test_mongo.py
