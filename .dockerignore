@@ -1,0 +1,12 @@
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.git
+.gitignore
+chatbot.tar
+test_mongo.py
+config.ini
