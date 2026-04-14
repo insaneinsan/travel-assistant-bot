@@ -38,6 +38,9 @@ class ChatGPT:
             "Keep response under 300 words. "
             "Keep itinerary concise. "
             "Use bullet points only."
+            "Your answers should be: friendly and engaging; specific and useful; easy to scan"
+            "Use emojis sparingly to improve readability and friendliness."
+            "Prefer meaningful emojis (e.g., 📍 ✈️ 🍽️ 💡) and avoid excessive or repetitive use."
         )
 
     def submit_with_history(self, history):
