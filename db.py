@@ -1,7 +1,9 @@
 from pymongo import MongoClient
 from datetime import datetime
 import os
+import logging
 
+logger = logging.getLogger("travel_bot")
 
 class MongoLogger:
     def __init__(self, config):
@@ -16,6 +18,11 @@ class MongoLogger:
         self.db = self.client[db_name]
         self.collection = self.db[collection_name]
 
+        logger.info(
+            "MONGO_CONNECTED | db_name=%s | collection=%s",
+            db_name, collection_name
+        )
+
     def save_chat_log(self, user_id, username, message, response):
         doc = {
             "user_id": user_id,
@@ -24,5 +31,13 @@ class MongoLogger:
             "response": response,
             "created_at": datetime.utcnow()
         }
-        print("SAVING TO DB:", doc)
+
         self.collection.insert_one(doc)
+        logger.info("MONGO_INSERT_SUCCESS | user_id=%s", user_id)
+
+    def save_metrics_snapshot(self, snapshot):
+        self.db["metrics"].insert_one({
+            **snapshot,
+            "created_at": datetime.utcnow()
+        })
+    

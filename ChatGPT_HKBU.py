@@ -1,7 +1,9 @@
 import requests
 import configparser
 import os
+import logging
 
+logger = logging.getLogger("travel_bot")
 
 class ChatGPT:
     def __init__(self, config):
@@ -12,7 +14,6 @@ class ChatGPT:
 
         self.model = model
         self.url = f"{base_url}/deployments/{model}/chat/completions?api-version={api_ver}"
-
         self.headers = {
             "accept": "application/json",
             "Content-Type": "application/json",
@@ -41,7 +42,6 @@ class ChatGPT:
 
     def submit_with_history(self, history):
         messages = [{"role": "system", "content": self.system_message}] + history
-
         payload = {
             "messages": messages,
             "temperature": 1,
@@ -59,17 +59,10 @@ class ChatGPT:
 
         if response.status_code == 200:
             return response.json()["choices"][0]["message"]["content"]
-        return "Error: " + response.text
 
-
-if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    config.read("config.ini")
-    chatGPT = ChatGPT(config)
-
-    while True:
-        print("Input your query: ", end="")
-        response = chatGPT.submit_with_history([
-            {"role": "user", "content": input()}
-        ])
-        print(response)
+        logger.error(
+            "LLM_HTTP_ERROR | status_code=%s | body=%s",
+            response.status_code,
+            response.text[:500]
+        )
+        raise RuntimeError(f"LLM API failed with status {response.status_code}")
